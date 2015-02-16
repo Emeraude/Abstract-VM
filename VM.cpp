@@ -10,11 +10,12 @@
 
 #include <iostream>
 #include <sstream>
-#include "vm.hpp"
+#include "VM.hpp"
 
 VM::VM(const char *filename) {
   std::ifstream file(filename);
   std::stringstream buf;
+  std::string line;
 
   if (filename) {
     if (!file.good()) {
@@ -25,7 +26,11 @@ VM::VM(const char *filename) {
     file.close();
   }
   else {
-    buf << std::cout.rdbuf();
+    while (line != ";;") {
+      std::cin >> line;
+      if (line != ";;")
+	buf << line << std::endl;
+    }
     _buf = buf.str();
   }
   _fptr["push"] = &VM::push;

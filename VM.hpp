@@ -11,10 +11,10 @@
 #ifndef VM_HPP_
 # define VM_HPP_
 
-#include <list>
-#include <map>
-#include <fstream>
-#include "IOperand.hpp"
+# include <list>
+# include <map>
+# include <fstream>
+# include "IOperand.hpp"
 
 class	VM
 {
