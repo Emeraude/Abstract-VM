@@ -63,6 +63,10 @@ VM	&VM::operator=(const VM& vm) {
   return *this;
 }
 
+// void	VM::parse() {
+//   ;
+// }
+
 void	VM::push(std::string const &str) {}
 void	VM::pop(std::string const &str) {}
 void	VM::dump(std::string const &str) {}

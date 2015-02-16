@@ -36,6 +36,7 @@ public:
   virtual IOperand		*operator/(const IOperand &rhs) const = 0;
   virtual IOperand		*operator%(const IOperand &rhs) const = 0;
 
+  virtual ~IOperand() {}
 };
 
 #endif /* !IOPERAND_HPP_ */

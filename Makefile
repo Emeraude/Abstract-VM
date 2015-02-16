@@ -15,12 +15,16 @@ CPP	=	g++
 RM	=	rm -f
 
 CPPFLAGS	+= -W -Wall -Wextra -Werror
+CPPFLAGS	+= -I ./includes
 
-SRCS	=	main.cpp
+DIR	=	./srcs
+
+SRCS	=	$(DIR)/main.cpp \
+		$(DIR)/VM.cpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-all:	$(NAME)
+all:		$(NAME)
 
 $(NAME):	$(OBJS)
 		$(CPP) $(OBJS) -o $(NAME)
