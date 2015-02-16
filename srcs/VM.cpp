@@ -67,14 +67,14 @@ VM	&VM::operator=(const VM& vm) {
 //   ;
 // }
 
-void	VM::push(std::string const &str) {}
-void	VM::pop(std::string const &str) {}
-void	VM::dump(std::string const &str) {}
-void	VM::assert(std::string const &str) {}
-void	VM::add(std::string const &str) {}
-void	VM::sub(std::string const &str) {}
-void	VM::mul(std::string const &str) {}
-void	VM::div(std::string const &str) {}
-void	VM::mod(std::string const &str) {}
-void	VM::print(std::string const &str) {}
-void	VM::exit(std::string const &str) {}
+void	VM::push(std::string const &str) {(void)str;}
+void	VM::pop(std::string const &str) {(void)str;}
+void	VM::dump(std::string const &str) {(void)str;}
+void	VM::assert(std::string const &str) {(void)str;}
+void	VM::add(std::string const &str) {(void)str;}
+void	VM::sub(std::string const &str) {(void)str;}
+void	VM::mul(std::string const &str) {(void)str;}
+void	VM::div(std::string const &str) {(void)str;}
+void	VM::mod(std::string const &str) {(void)str;}
+void	VM::print(std::string const &str) {(void)str;}
+void	VM::exit(std::string const &str) {(void)str;}
