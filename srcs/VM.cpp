@@ -1,3 +1,4 @@
+
 //
 // vm.cpp for  in /home/broggi_t/projet/Abstract_VM
 // 
@@ -10,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "VM.hpp"
 
 VM::VM(const char *filename) {
@@ -27,7 +29,7 @@ VM::VM(const char *filename) {
   }
   else {
     while (line != ";;") {
-      std::cin >> line;
+      std::getline(std::cin, line);
       if (line != ";;")
 	buf << line << std::endl;
     }
@@ -63,13 +65,24 @@ VM	&VM::operator=(const VM& vm) {
   return *this;
 }
 
-// void	VM::parse() {
-//   ;
-// }
-
 void	VM::push(std::string const &str) {(void)str;}
-void	VM::pop(std::string const &str) {(void)str;}
-void	VM::dump(std::string const &str) {(void)str;}
+
+void	VM::pop(std::string const &str UNUSED) {
+  if (_stack.empty()) {
+    // throw exception
+  }
+  _stack.pop_front();
+}
+
+static void	display(IOperand *op) {
+  std::cout << op->toString() << std::endl;
+}
+
+// make it const ? it doesn't match with fptr
+void	VM::dump(std::string const &str UNUSED) {
+  for_each(_stack.begin(), _stack.end(), display);
+}
+
 void	VM::assert(std::string const &str) {(void)str;}
 void	VM::add(std::string const &str) {(void)str;}
 void	VM::sub(std::string const &str) {(void)str;}
@@ -78,3 +91,19 @@ void	VM::div(std::string const &str) {(void)str;}
 void	VM::mod(std::string const &str) {(void)str;}
 void	VM::print(std::string const &str) {(void)str;}
 void	VM::exit(std::string const &str) {(void)str;}
+
+void	VM::run() {
+  std::stringstream	ss;
+  std::string		line, cmd, args;
+
+  ss << _buf;
+  while (std::getline(ss, line)) {
+    std::istringstream is(line);
+    is >> cmd;
+    is >> args;
+    if (!_fptr[cmd]) {
+      // throw exception
+    }
+    (this->*_fptr[cmd])(args);
+  }
+}

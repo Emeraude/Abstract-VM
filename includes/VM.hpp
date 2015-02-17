@@ -16,6 +16,10 @@
 # include <fstream>
 # include "IOperand.hpp"
 
+# ifndef UNUSED
+#  define UNUSED __attribute__((unused))
+# endif
+
 class	VM
 {
 private:
@@ -42,6 +46,8 @@ public:
   ~VM();
   VM(const VM &);
   VM	&operator=(const VM &);
+
+  void run();
 };
 
 #endif /* !VM_HPP_H */
