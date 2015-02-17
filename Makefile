@@ -10,30 +10,37 @@
 
 NAME	=	avm
 
-CPP	=	g++
-
-RM	=	rm -f
-
-CPPFLAGS	+= -W -Wall -Wextra -Werror
-CPPFLAGS	+= -I ./includes
-
 DIR	=	./srcs
 
 SRCS	=	$(DIR)/main.cpp \
 		$(DIR)/VM.cpp
 
+CPPFLAGS	+= -W -Wall -Wextra -Werror
+CPPFLAGS	+= -I ./includes
+
+CC	=	g++
+
+RM	=	rm -f
+
 OBJS	=	$(SRCS:.cpp=.o)
+
+%.o: %.cpp
+		@printf "[\033[0;32mcompiled\033[0m] % 29s\n" $<
+		@$(CC) -c -o $@ $< $(CPPFLAGS)
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-		$(CPP) $(OBJS) -o $(NAME)
+		@$(CC) $(OBJS) -o $(NAME)
+		@printf "[\033[0;36mbuilded\033[0m] % 30s\n" $(NAME)
 
 clean:
-		$(RM) $(OBJS)
+		@$(RM) $(OBJS)
+		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(OBJS)
 
 fclean:		clean
-		$(RM) $(NAME)
+		@$(RM) $(NAME)
+		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(NAME)
 
 re:		fclean all
 
