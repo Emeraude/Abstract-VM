@@ -1,4 +1,3 @@
-
 //
 // vm.cpp for  in /home/broggi_t/projet/Abstract_VM
 // 
@@ -94,16 +93,20 @@ void	VM::exit(std::string const &str) {(void)str;}
 
 void	VM::run() {
   std::stringstream	ss;
+  std::istringstream	is;
   std::string		line, cmd, args;
 
   ss << _buf;
   while (std::getline(ss, line)) {
-    std::istringstream is(line);
-    is >> cmd;
-    is >> args;
-    if (!_fptr[cmd]) {
-      // throw exception
+    if (!line.empty()) {
+      line = line.substr(0, line.find(";"));
+      is.str(line);
+      is >> cmd;
+      is >> args;
+      if (!_fptr[cmd]) {
+	// throw exception
+      }
+      (this->*_fptr[cmd])(args);
     }
-    (this->*_fptr[cmd])(args);
   }
 }
