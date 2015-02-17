@@ -18,7 +18,6 @@ template<typename T>
 class Operand : public IOperand {
 private:
   eOperandType	_type;
-  int		_precision;
   T		_value;
   std::string	_str;
 
@@ -34,20 +33,69 @@ public:
 
   Operand(Operand const& o) {
     _type = o._type;
-    _precision = o._precision;
     _value = o._value;
     _str = o._str;
   };
-  ~Operand();
+
+  // virtual ?
+  ~Operand() {}
+
   Operand &operator=(Operand const& o) {
     if (this != &o) {
       _type = o._type;
-      _precision = o._precision;
       _value = o._value;
       _str = o._str;
     }
     return *this;
   }
+
+  // GETTERS
+
+  std::string const	&toString() const {
+    return _str;
+  }
+
+  int			getPrecision() const {
+    return static_cast<int>(_type);
+  }
+
+  eOperandType		getType() const {
+    return _type;
+  }
+
+  // OPERATORS
+
+  IOperand		*operator+(const IOperand &rhs) const {
+    std::stringstream	ss;
+    eOperandType	precise;
+    double		value;
+
+    ss << rhs.toString();
+    precise = _type < rhs.getType() ? _type : rhs.getType();
+    ss >> value;
+    value = _value + value;
+    switch (precise) {
+    case Int8:
+      return Operand<char>(precise, value);
+      break;
+    case Int16:
+      return Operand<short>(precise, value);
+      break;
+    case Int32:
+      return Operand<int>(precise, value);
+      break;
+    case Float:
+      return Operand<float>(precise, value);
+      break;
+    default:
+      return Operand<double>(precise, value);
+    }
+  }
+
+  // virtual IOperand		*operator-(const IOperand &rhs) const = 0;
+  // virtual IOperand		*operator*(const IOperand &rhs) const = 0;
+  // virtual IOperand		*operator/(const IOperand &rhs) const = 0;
+  // virtual IOperand		*operator%(const IOperand &rhs) const = 0;
 };
 
 #endif
