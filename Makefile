@@ -12,7 +12,8 @@ NAME	=	avm
 
 DIR	=	./srcs
 
-SRCS	=	$(DIR)/main.cpp \
+SRCS	=	$(DIR)/Exceptions.cpp \
+		$(DIR)/main.cpp \
 		$(DIR)/Parser.cpp \
 		$(DIR)/VM.cpp
 

@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include "Exceptions.hpp"
 #include "Parser.hpp"
 
 #include <iostream>
@@ -32,9 +33,8 @@ IOperand*	Parser::operand(std::string const& str) {
 
   if (str.find("(") == std::string::npos
       || str.find(")") == std::string::npos
-      || str.find("(") > str.find(")")) {
-    // throw exception
-  }
+      || str.find("(") > str.find(")"))
+    throw new ParseError("Mismathing parenthesis");
   type = str.substr(0, str.find("("));
   value = str.substr(str.find("(") + 1, str.find(")") - str.find(")") - 1);
   // create Operand
@@ -42,26 +42,24 @@ IOperand*	Parser::operand(std::string const& str) {
 }
 
 void		Parser::check(char c) {
-  if (!(c == '-' || c == '.' || (c >= '0' && c <= '9'))) {
-    // throw invalide char found in value
-  }
+  if (!(c == '-' || c == '.' || (c >= '0' && c <= '9')))
+    throw new ParseError("Invalid value");
 }
 
 IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
   for_each(value.begin(), value.end(), Parser::check);
   if (value.find("-") != std::string::npos &&
       (value.find("-") != 0
-       || count(value.begin(), value.end(), '-') > 1)) {
-    // throw invalid minus '-' symbol
-  }
-  if (type < Float && value.find(".") != std::string::npos) {
-    // throw dot '.' symbol in integer value
-  }
+       || count(value.begin(), value.end(), '-') > 1))
+    throw new ParseError("Invalid minus '-' symbol find in value");
+  if (type < Float && value.find(".") != std::string::npos)
+    throw new ParseError("Invalid dot '.' symbol find in value");
   if (type >= Float &&
       (count(value.begin(), value.end(), '.') > 1
        || !IS_NB(value[value.find(".") - 1])
        || !IS_NB(value[value.find(".") + 1]))) {
-    // throw invalid dot '.' symbol
+    throw new ParseError("Invalid dot '.' symbol find in value");
   }
+  // return a new operand ;)
   return NULL;
 }

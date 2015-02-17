@@ -42,7 +42,7 @@ private:
 
 public:
 
-  VM(const char * filename = NULL);
+  VM(const char* filename = NULL);
   ~VM();
   VM(const VM &);
   VM	&operator=(const VM &);

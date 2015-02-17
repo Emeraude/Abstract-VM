@@ -13,6 +13,7 @@
 #include <algorithm>
 #include "VM.hpp"
 #include "Parser.hpp"
+#include "Exceptions.hpp"
 
 VM::VM(const char *filename) {
   std::ifstream file(filename);
@@ -20,9 +21,8 @@ VM::VM(const char *filename) {
   std::string line;
 
   if (filename) {
-    if (!file.good()) {
-      // throw
-    }
+    if (!file.good())
+      throw new ParseError(std::string("Invalid file : ") + filename);
     buf << file.rdbuf();
     _buf = buf.str();
     file.close();
@@ -70,9 +70,8 @@ void	VM::push(std::string const &str) {
 }
 
 void	VM::pop(std::string const &str UNUSED) {
-  if (_stack.empty()) {
-    // throw exception
-  }
+  if (_stack.empty())
+    throw new LogicError("Error on pop : stack is empty");
   _stack.pop_front();
 }
 
@@ -100,11 +99,11 @@ void	VM::run() {
   std::string		*args;
 
   ss << _buf;
+  // there is shit with ^D
   while (std::getline(ss, line)) {
     args = Parser::line(line);
-    if (!_fptr[args[0]]) {
-      // throw exception
-    }
+    if (!_fptr[args[0]])
+      throw new ParseError(std::string("Unknown instruction : ") + args[0]);
     if (!args[0].empty())
       (this->*_fptr[args[0]])(args[1]);
     delete[] args;
