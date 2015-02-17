@@ -12,6 +12,7 @@
 #include <sstream>
 #include <algorithm>
 #include "VM.hpp"
+#include "Parser.hpp"
 
 VM::VM(const char *filename) {
   std::ifstream file(filename);
@@ -65,16 +66,7 @@ VM	&VM::operator=(const VM& vm) {
 }
 
 void	VM::push(std::string const &str) {
-  std::string	type;
-  std::string	value;
-
-  if (str.find("(") == std::string::npos
-      || str.find(")") == std::string::npos) {
-    // throw exception
-  }
-  type = str.substr(0, str.find("("));
-  value = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
-  // Là faudra faire un createOperand une fois qu'on l'aura codé
+  _stack.push_front(Parser::operand(str));
 }
 
 void	VM::pop(std::string const &str UNUSED) {
@@ -104,20 +96,17 @@ void	VM::exit(std::string const &str) {(void)str;}
 
 void	VM::run() {
   std::stringstream	ss;
-  std::istringstream	is;
-  std::string		line, cmd, args;
+  std::string		line;
+  std::string		*args;
 
   ss << _buf;
   while (std::getline(ss, line)) {
-    if (!line.empty()) {
-      line = line.substr(0, line.find(";"));
-      is.str(line);
-      is >> cmd;
-      is >> args;
-      if (!_fptr[cmd]) {
-	// throw exception
-      }
-      (this->*_fptr[cmd])(args);
+    args = Parser::line(line);
+    if (!_fptr[args[0]]) {
+      // throw exception
     }
+    if (!args[0].empty())
+      (this->*_fptr[args[0]])(args[1]);
+    delete[] args;
   }
 }

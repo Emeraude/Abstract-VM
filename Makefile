@@ -13,6 +13,7 @@ NAME	=	avm
 DIR	=	./srcs
 
 SRCS	=	$(DIR)/main.cpp \
+		$(DIR)/Parser.cpp \
 		$(DIR)/VM.cpp
 
 CPPFLAGS	+= -W -Wall -Wextra -Werror
