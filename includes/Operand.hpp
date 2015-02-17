@@ -14,6 +14,8 @@
 # include <sstream>
 # include "IOperand.hpp"
 
+static IOperand	*result(eOperandType type, double value);
+
 template<typename T>
 class Operand : public IOperand {
 private:
@@ -27,7 +29,7 @@ public:
 
     _type = type;
     _value = nb;
-    ss << nb;
+    ss << +nb;
     _str = ss.str();
   }
 
@@ -37,7 +39,6 @@ public:
     _str = o._str;
   };
 
-  // virtual ?
   ~Operand() {}
 
   Operand &operator=(Operand const& o) {
@@ -71,31 +72,87 @@ public:
     double		value;
 
     ss << rhs.toString();
-    precise = _type < rhs.getType() ? _type : rhs.getType();
+    precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
-    value = _value + value;
-    switch (precise) {
-    case Int8:
-      return Operand<char>(precise, value);
-      break;
-    case Int16:
-      return Operand<short>(precise, value);
-      break;
-    case Int32:
-      return Operand<int>(precise, value);
-      break;
-    case Float:
-      return Operand<float>(precise, value);
-      break;
-    default:
-      return Operand<double>(precise, value);
-    }
+    value += _value;
+    return result(precise, value);
   }
 
-  // virtual IOperand		*operator-(const IOperand &rhs) const = 0;
-  // virtual IOperand		*operator*(const IOperand &rhs) const = 0;
-  // virtual IOperand		*operator/(const IOperand &rhs) const = 0;
-  // virtual IOperand		*operator%(const IOperand &rhs) const = 0;
+  IOperand		*operator-(const IOperand &rhs) const {
+    std::stringstream	ss;
+    eOperandType	precise;
+    double		value;
+
+    ss << rhs.toString();
+    precise = _type >= rhs.getType() ? _type : rhs.getType();
+    ss >> value;
+    value = _value - value;
+    return result(precise, value);
+  }
+
+  IOperand		*operator*(const IOperand &rhs) const {
+    std::stringstream	ss;
+    eOperandType	precise;
+    double		value;
+
+    ss << rhs.toString();
+    precise = _type >= rhs.getType() ? _type : rhs.getType();
+    ss >> value;
+    value *= _value;
+    return result(precise, value);
+  }
+
+  IOperand		*operator/(const IOperand &rhs) const {
+    std::stringstream	ss;
+    eOperandType	precise;
+    double		value;
+
+    ss << rhs.toString();
+    precise = _type >= rhs.getType() ? _type : rhs.getType();
+    ss >> value;
+    if (!value) {
+      ;// throw an exception
+    }
+    value = _value / value;
+    return result(precise, value);
+ }
+
+  IOperand		*operator%(const IOperand &rhs) const {
+    std::stringstream	ss;
+    eOperandType	precise;
+    long long		value;
+
+    if (rhs.getType() >= Float) {
+      ;// throw an exception
+    }
+    ss << rhs.toString();
+    precise = _type >= rhs.getType() ? _type : rhs.getType();
+    ss >> value;
+    if (!value) {
+      ;// throw an exception
+    }
+    value = static_cast<long long>(_value) % static_cast<long long>(value);
+    return result(precise, value);
+  }
 };
+
+static IOperand	*result(eOperandType type, double value) {
+  switch (type) {
+  case Int8:
+    return new Operand<char>(type, value);
+    break;
+  case Int16:
+    return new Operand<short>(type, value);
+    break;
+  case Int32:
+    return new Operand<int>(type, value);
+    break;
+  case Float:
+    return new Operand<float>(type, value);
+    break;
+  default:
+    return new Operand<double>(type, value);
+  }
+}
 
 #endif
