@@ -64,7 +64,18 @@ VM	&VM::operator=(const VM& vm) {
   return *this;
 }
 
-void	VM::push(std::string const &str) {(void)str;}
+void	VM::push(std::string const &str) {
+  std::string	type;
+  std::string	value;
+
+  if (str.find("(") == std::string::npos
+      || str.find(")") == std::string::npos) {
+    // throw exception
+  }
+  type = str.substr(0, str.find("("));
+  value = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
+  // Là faudra faire un createOperand une fois qu'on l'aura codé
+}
 
 void	VM::pop(std::string const &str UNUSED) {
   if (_stack.empty()) {
