@@ -77,6 +77,13 @@ IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
   return fptr[type](value);
 }
 
+IOperand*		Parser::createOperand(eOperandType type, double value) {
+  std::ostringstream	os;
+
+  os << value;
+  return Parser::createOperand(type, os.str());
+}
+
 // find a way to refactoring it
 // some bugs are still here for over/underflow :
 // int8(042) -> the first 0 make it bad

@@ -29,6 +29,7 @@ public:
   static std::string*	line(std::string const& line);
   static IOperand*	operand(std::string const& str);
   static IOperand*	createOperand(eOperandType type, std::string const& value);
+  static IOperand*	createOperand(eOperandType type, double value);
 };
 
 #endif

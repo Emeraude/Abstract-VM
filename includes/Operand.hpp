@@ -12,11 +12,11 @@
 # define OPERAND_HPP_
 
 # include <sstream>
+# include "Parser.hpp"
 # include "IOperand.hpp"
 # include "Exceptions.hpp"
 
-static IOperand	*result(eOperandType type, double value);
-
+#include <iostream>
 template<typename T>
 class Operand : public IOperand {
 private:
@@ -75,8 +75,7 @@ public:
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
-    value += _value;
-    return result(precise, value);
+    return Parser::createOperand(precise, _value + value);
   }
 
   IOperand		*operator-(const IOperand &rhs) const {
@@ -87,8 +86,7 @@ public:
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
-    value = _value - value;
-    return result(precise, value);
+    return Parser::createOperand(precise, _value - value);
   }
 
   IOperand		*operator*(const IOperand &rhs) const {
@@ -99,8 +97,7 @@ public:
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
-    value *= _value;
-    return result(precise, value);
+    return Parser::createOperand(precise, _value * value);
   }
 
   IOperand		*operator/(const IOperand &rhs) const {
@@ -113,8 +110,7 @@ public:
     ss >> value;
     if (!value)
       throw new MathError("Division by 0");
-    value = _value / value;
-    return result(precise, value);
+    return Parser::createOperand(precise, _value / value);
  }
 
   IOperand		*operator%(const IOperand &rhs) const {
@@ -130,27 +126,7 @@ public:
     if (!value)
       throw new MathError("Modulo by 0");
     value = static_cast<long long>(_value) % static_cast<long long>(value);
-    return result(precise, value);
+    return Parser::createOperand(precise, value);
   }
 };
-
-static IOperand	*result(eOperandType type, double value) {
-  switch (type) {
-  case Int8:
-    return new Operand<char>(type, value);
-    break;
-  case Int16:
-    return new Operand<short>(type, value);
-    break;
-  case Int32:
-    return new Operand<int>(type, value);
-    break;
-  case Float:
-    return new Operand<float>(type, value);
-    break;
-  default:
-    return new Operand<double>(type, value);
-  }
-}
-
 #endif
