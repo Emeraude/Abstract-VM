@@ -47,6 +47,18 @@ IOperand*	Parser::operand(std::string const& str) {
   ops["double"] = Double;
   if (ops.find(type) == ops.end())
     throw new ParseError("Unknown type : " + type);
+  for_each(value.begin(), value.end(), Parser::check);
+  if (value.find("-") != std::string::npos &&
+      (value.find("-") != 0
+       || count(value.begin(), value.end(), '-') > 1))
+    throw new ParseError("Invalid minus '-' symbol find in value");
+  if (ops[type] < Float && value.find(".") != std::string::npos)
+    throw new ParseError("Invalid dot '.' symbol find in value");
+  if (ops[type] >= Float &&
+      (count(value.begin(), value.end(), '.') > 1
+       || !IS_NB(value[value.find(".") - 1])
+       || !IS_NB(value[value.find(".") + 1])))
+    throw new ParseError("Invalid dot '.' symbol find in value");
   return Parser::createOperand(ops[type], value);
 }
 
@@ -62,18 +74,6 @@ IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
 						   &createFloat,
 						   &createDouble};
 
-  for_each(value.begin(), value.end(), Parser::check);
-  if (value.find("-") != std::string::npos &&
-      (value.find("-") != 0
-       || count(value.begin(), value.end(), '-') > 1))
-    throw new ParseError("Invalid minus '-' symbol find in value");
-  if (type < Float && value.find(".") != std::string::npos)
-    throw new ParseError("Invalid dot '.' symbol find in value");
-  if (type >= Float &&
-      (count(value.begin(), value.end(), '.') > 1
-       || !IS_NB(value[value.find(".") - 1])
-       || !IS_NB(value[value.find(".") + 1])))
-    throw new ParseError("Invalid dot '.' symbol find in value");
   return fptr[type](value);
 }
 
