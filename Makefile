@@ -36,6 +36,9 @@ $(NAME):	$(OBJS)
 		@$(CC) $(OBJS) -o $(NAME)
 		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME)
 
+bonus:		CPPFLAGS+=-DBONUS;
+bonus:		all
+
 clean:
 		@$(RM) $(OBJS)
 		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(OBJS)
@@ -46,4 +49,4 @@ fclean:		clean
 
 re:		fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all bonus clean fclean re

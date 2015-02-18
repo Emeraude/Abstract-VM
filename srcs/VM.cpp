@@ -84,7 +84,15 @@ void	VM::pop(std::string const &str UNUSED) {
 }
 
 static void	display(IOperand *op) {
+#ifdef BONUS
+  int		colors[] = {YELLOW, RED, MAGENTA, GREEN, CYAN};
+  std::string	types[] = {"int8", "int16", "int32", "float", "double"};
+
+  std::cout << "\033[" << colors[op->getPrecision()] << "m" <<
+    types[op->getPrecision()] << "(" << op->toString() << ")\033[0m" << std::endl;
+#else
   std::cout << op->toString() << std::endl;
+#endif
 }
 
 void	VM::dump(std::string const &str UNUSED) {
