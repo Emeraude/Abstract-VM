@@ -80,6 +80,7 @@ void	VM::push(std::string const &str) {
 void	VM::pop(std::string const &str UNUSED) {
   if (_stack.empty())
     throw new LogicError("Error on pop : stack is empty");
+  delete _stack.front();
   _stack.pop_front();
 }
 
