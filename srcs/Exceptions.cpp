@@ -34,5 +34,5 @@ LogicError::LogicError(std::string const& msg) : VMException(msg) {
 }
 
 AssertError::AssertError(std::string const& msg) : VMException(msg) {
-  _type = "Assert error : ";
+  _type = "Assertion failed : ";
 }

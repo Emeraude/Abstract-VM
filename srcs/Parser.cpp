@@ -8,8 +8,10 @@
 // Last update Tue Feb 17 18:11:18 2015 broggi_t
 //
 
+#include <map>
 #include <sstream>
 #include <algorithm>
+#include "Operand.hpp"
 #include "Exceptions.hpp"
 #include "Parser.hpp"
 
@@ -30,15 +32,22 @@ std::string* Parser::line(std::string const& line) {
 
 IOperand*	Parser::operand(std::string const& str) {
   std::string	type, value;
+  std::map<std::string, eOperandType>	ops;
 
   if (str.find("(") == std::string::npos
       || str.find(")") == std::string::npos
       || str.find("(") > str.find(")"))
     throw new ParseError("Mismathing parenthesis");
   type = str.substr(0, str.find("("));
-  value = str.substr(str.find("(") + 1, str.find(")") - str.find(")") - 1);
-  // create Operand
-  return NULL;
+  value = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
+  ops["int8"] = Int8;
+  ops["int16"] = Int16;
+  ops["int32"] = Int32;
+  ops["float"] = Float;
+  ops["double"] = Double;
+  if (ops.find(type) == ops.end())
+    throw new ParseError("Unknown type : " + type);
+  return Parser::createOperand(ops[type], value);
 }
 
 void		Parser::check(char c) {
@@ -47,6 +56,12 @@ void		Parser::check(char c) {
 }
 
 IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
+  IOperand *(*fptr[])(const std::string& value) = {&createInt8,
+						   &createInt16,
+						   &createInt32,
+						   &createFloat,
+						   &createDouble};
+
   for_each(value.begin(), value.end(), Parser::check);
   if (value.find("-") != std::string::npos &&
       (value.find("-") != 0
@@ -57,9 +72,78 @@ IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
   if (type >= Float &&
       (count(value.begin(), value.end(), '.') > 1
        || !IS_NB(value[value.find(".") - 1])
-       || !IS_NB(value[value.find(".") + 1]))) {
+       || !IS_NB(value[value.find(".") + 1])))
     throw new ParseError("Invalid dot '.' symbol find in value");
-  }
-  // return a new operand ;)
-  return NULL;
+  return fptr[type](value);
+}
+
+// find a way to refactoring it
+// some bugs are still here for over/underflow :
+// int8(042) -> the first 0 make it bad
+// int32(-0) -> '-' is ignored, so it's bullshit after
+// float(42.0) -> last 0 is shit
+
+IOperand*		Parser::createInt8(const std::string& value) {
+  IOperand*		ret;
+  std::stringstream	ss;
+  short			val;
+
+  ss.str(value);
+  ss >> val;
+  ret = new Operand<char>(Int8, val);
+  if (ret->toString() != value)
+    throw new MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
+  return ret;
+}
+
+IOperand*		Parser::createInt16(const std::string& value) {
+  IOperand*		ret;
+  std::stringstream	ss;
+  short			val;
+
+  ss.str(value);
+  ss >> val;
+  ret = new Operand<short>(Int16, val);
+  if (ret->toString() != value)
+    throw new MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
+  return ret;
+}
+
+IOperand*		Parser::createInt32(const std::string& value) {
+  IOperand*		ret;
+  std::stringstream	ss;
+  int			val;
+
+  ss.str(value);
+  ss >> val;
+  ret = new Operand<int>(Int32, val);
+  if (ret->toString() != value)
+    throw new MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
+  return ret;
+}
+
+IOperand*		Parser::createFloat(const std::string& value) {
+  IOperand*		ret;
+  std::stringstream	ss;
+  float			val;
+
+  ss.str(value);
+  ss >> val;
+  ret = new Operand<float>(Float, val);
+  if (ret->toString() != value)
+    throw new MathError("Overflow or underflow : " + value + " doesn't fit in a float");
+  return ret;
+}
+
+IOperand*		Parser::createDouble(const std::string& value) {
+  IOperand*		ret;
+  std::stringstream	ss;
+  double		val;
+
+  ss.str(value);
+  ss >> val;
+  ret = new Operand<double>(Double, val);
+  if (ret->toString() != value)
+    throw new MathError("Overflow or underflow : " + value + " doesn't fit in a double");
+  return ret;
 }

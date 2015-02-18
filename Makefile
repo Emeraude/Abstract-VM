@@ -34,7 +34,7 @@ all:		$(NAME)
 
 $(NAME):	$(OBJS)
 		@$(CC) $(OBJS) -o $(NAME)
-		@printf "[\033[0;36mbuilded\033[0m] % 30s\n" $(NAME)
+		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME)
 
 clean:
 		@$(RM) $(OBJS)

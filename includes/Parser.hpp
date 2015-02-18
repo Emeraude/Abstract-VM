@@ -17,6 +17,13 @@
 # define IS_NB(c)	(c >= '0' && c <= '9')
 
 class Parser {
+private:
+  static IOperand*	createInt8(const std::string& value);
+  static IOperand*	createInt16(const std::string& value);
+  static IOperand*	createInt32(const std::string& value);
+  static IOperand*	createFloat(const std::string& value);
+  static IOperand*	createDouble(const std::string& value);
+
 public:
   static void		check(char c);
   static std::string*	line(std::string const& line);

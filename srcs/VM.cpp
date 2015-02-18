@@ -20,6 +20,7 @@ VM::VM(const char *filename) {
   std::stringstream buf;
   std::string line;
 
+  _end = false;
   if (filename) {
     if (!file.good())
       throw new ParseError(std::string("Invalid file : ") + filename);
@@ -48,9 +49,15 @@ VM::VM(const char *filename) {
   _fptr["exit"] = &VM::exit;
 }
 
-VM::~VM() {}
+VM::~VM() {
+  while (!_stack.empty()) {
+    delete _stack.front();
+    _stack.pop_front();
+  }
+}
 
 VM::VM(const VM& vm) {
+  _end = vm._end;
   _buf = vm._buf;
   _stack = vm._stack;
   _fptr = vm._fptr;
@@ -58,6 +65,7 @@ VM::VM(const VM& vm) {
 
 VM	&VM::operator=(const VM& vm) {
   if (this != &vm) {
+    _end = vm._end;
     _buf = vm._buf;
     _stack = vm._stack;
     _fptr = vm._fptr;
@@ -79,19 +87,111 @@ static void	display(IOperand *op) {
   std::cout << op->toString() << std::endl;
 }
 
-// make it const ? it doesn't match with fptr
 void	VM::dump(std::string const &str UNUSED) {
   for_each(_stack.begin(), _stack.end(), display);
 }
 
-void	VM::assert(std::string const &str) {(void)str;}
-void	VM::add(std::string const &str) {(void)str;}
-void	VM::sub(std::string const &str) {(void)str;}
-void	VM::mul(std::string const &str) {(void)str;}
-void	VM::div(std::string const &str) {(void)str;}
-void	VM::mod(std::string const &str) {(void)str;}
-void	VM::print(std::string const &str) {(void)str;}
-void	VM::exit(std::string const &str) {(void)str;}
+void		VM::assert(std::string const &str) {
+  IOperand	*cmp = Parser::operand(str);
+  std::string	types[] = {"int8", "int16", "int32", "float", "double"};
+
+  if (_stack.front()->toString() != cmp->toString()
+      || _stack.front()->getType() != cmp->getType())
+    throw new AssertError(types[_stack.front()->getType()] + "(" + _stack.front()->toString()
+			  + ") != "
+			  + types[cmp->getType()] + "(" + cmp->toString() + ")");
+  delete cmp;
+}
+
+// TODO : find a way to refactoring this
+
+void		VM::add(std::string const &str UNUSED) {
+  IOperand	*first, *second;
+
+  if (_stack.size() < 2)
+    throw new LogicError("Trying to make an addition with a stack smaller than 2");
+  first = _stack.front();
+  _stack.pop_front();
+  second = _stack.front();
+  _stack.pop_front();
+  _stack.push_front(*first + *second);
+  delete first;
+  delete second;
+}
+
+void		VM::sub(std::string const &str UNUSED) {
+  IOperand	*first, *second;
+
+  if (_stack.size() < 2)
+    throw new LogicError("Trying to make a substraction with a stack smaller than 2");
+  first = _stack.front();
+  _stack.pop_front();
+  second = _stack.front();
+  _stack.pop_front();
+  _stack.push_front(*first - *second);
+  delete first;
+  delete second;
+}
+
+void		VM::mul(std::string const &str UNUSED) {
+  IOperand	*first, *second;
+
+  if (_stack.size() < 2)
+    throw new LogicError("Trying to make a multiplication with a stack smaller than 2");
+  first = _stack.front();
+  _stack.pop_front();
+  second = _stack.front();
+  _stack.pop_front();
+  _stack.push_front(*first * *second);
+  delete first;
+  delete second;
+}
+
+void		VM::div(std::string const &str UNUSED) {
+  IOperand	*first, *second;
+
+  if (_stack.size() < 2)
+    throw new LogicError("Trying to make a division with a stack smaller than 2");
+  first = _stack.front();
+  _stack.pop_front();
+  second = _stack.front();
+  _stack.pop_front();
+  _stack.push_front(*first / *second);
+  delete first;
+  delete second;
+}
+
+void	VM::mod(std::string const &str UNUSED) {
+  IOperand	*first, *second;
+
+  if (_stack.size() < 2)
+    throw new LogicError("Trying to make a modulo with a stack smaller than 2");
+  first = _stack.front();
+  _stack.pop_front();
+  second = _stack.front();
+  _stack.pop_front();
+  _stack.push_front(*first % *second);
+  delete first;
+  delete second;
+}
+
+void			VM::print(std::string const &str) {
+  std::stringstream	ss;
+  int			val;
+
+  if (_stack.front()->getType() == Int8) {
+    // printf a \n ??
+    ss << _stack.front()->toString();
+    ss >> val;
+    std::cout << static_cast<char>(val);
+  }
+  else
+    this->assert(str);
+}
+
+void	VM::exit(std::string const &str UNUSED) {
+  _end = true;
+}
 
 void	VM::run() {
   std::stringstream	ss;
@@ -103,9 +203,12 @@ void	VM::run() {
   while (std::getline(ss, line)) {
     args = Parser::line(line);
     if (!_fptr[args[0]])
-      throw new ParseError(std::string("Unknown instruction : ") + args[0]);
+      throw new ParseError("Unknown instruction : " + args[0]);
     if (!args[0].empty())
       (this->*_fptr[args[0]])(args[1]);
     delete[] args;
+    if (_end)
+      return ;
   }
+  throw new LogicError("No exit instruction found");
 }

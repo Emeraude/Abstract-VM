@@ -20,10 +20,9 @@
 #  define UNUSED __attribute__((unused))
 # endif
 
-class	VM
-{
+class VM {
 private:
-
+  bool								_end;
   std::string							_buf;
   std::list<IOperand *>						_stack;
   std::map<std::string, void (VM::*)(std::string const &)>	_fptr;
@@ -41,7 +40,6 @@ private:
   void	exit(std::string const &str);
 
 public:
-
   VM(const char* filename = NULL);
   ~VM();
   VM(const VM &);
@@ -50,4 +48,4 @@ public:
   void run();
 };
 
-#endif /* !VM_HPP_H */
+#endif
