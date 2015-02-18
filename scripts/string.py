@@ -3,13 +3,17 @@
 import sys
 
 if len(sys.argv) < 2:
-    print("Usage : " + sys.argv[0] + " <string>")
+    print("Usage : " + sys.argv[0] + " <string>...")
     exit(1)
-sys.argv[1] += '\n'
-for c in sys.argv[1]:
-    print("push int8(" + str(ord(c)) + ")")
-    print("print")
-    print("pop")
+
+for i, string in enumerate(sys.argv):
+    if i == 0:
+        continue
+    string += '\n';
+    for c in string:
+        print("push int8(" + str(ord(c)) + ")")
+        print("print")
+        print("pop")
 
 print("exit");
 print(";;");
