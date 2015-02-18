@@ -184,18 +184,15 @@ void	VM::mod(std::string const &str UNUSED) {
   delete second;
 }
 
-void			VM::print(std::string const &str) {
+void			VM::print(std::string const &str UNUSED) {
   std::stringstream	ss;
   int			val;
 
-  if (_stack.front()->getType() == Int8) {
-    // printf a \n ??
-    ss << _stack.front()->toString();
-    ss >> val;
-    std::cout << static_cast<char>(val);
-  }
-  else
-    this->assert(str);
+  if (_stack.front()->getType() != Int8)
+    throw new LogicError("Trying to print a non-int8 value");
+  ss << _stack.front()->toString();
+  ss >> val;
+  std::cout << static_cast<char>(val);
 }
 
 void	VM::exit(std::string const &str UNUSED) {
