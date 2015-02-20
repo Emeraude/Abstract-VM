@@ -16,7 +16,6 @@
 # include "IOperand.hpp"
 # include "Exceptions.hpp"
 
-#include <iostream>
 template<typename T>
 class Operand : public IOperand {
 private:

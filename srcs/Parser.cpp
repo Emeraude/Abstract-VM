@@ -15,18 +15,18 @@
 #include "Exceptions.hpp"
 #include "Parser.hpp"
 
-#include <iostream>
 std::string* Parser::line(std::string const& line) {
   std::istringstream		is;
-  std::string			str;
-  std::string			*args = new std::string[2];
+  std::string			*args = new std::string[2], last;
 
   if (!line.empty()) {
-    str = line.substr(0, line.find(";"));
-    is.str(str);
-    is >> args[0];
-    is >> args[1];
+    is.str(line.substr(0, line.find(";")));
+    is >> args[0] >> args[1] >> last;
   }
+  if ((args[0] == "push" || args[0] == "assert")
+      ? !last.empty()
+      : !args[1].empty())
+    throw ParseError("Invalid number of arguments for instruction '" + args[0] + "'");
   return args;
 }
 
