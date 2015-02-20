@@ -67,6 +67,8 @@ public:
 
   // OPERATORS
 
+  // TODO : refactoring it
+
   IOperand		*operator+(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;
@@ -109,7 +111,7 @@ public:
     precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
     if (!value)
-      throw new MathError("Division by 0");
+      throw MathError("Division by 0");
     return Parser::createOperand(precise, _value / value);
  }
 
@@ -119,12 +121,12 @@ public:
     long long		value;
 
     if (rhs.getType() >= Float || _type >= Float)
-      throw new MathError("Error : can't process modulo on decimal types");
+      throw MathError("Error : can't process modulo on decimal types");
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
     ss >> value;
     if (!value)
-      throw new MathError("Modulo by 0");
+      throw MathError("Modulo by 0");
     value = static_cast<long long>(_value) % static_cast<long long>(value);
     return Parser::createOperand(precise, value);
   }

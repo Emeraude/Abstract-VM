@@ -20,6 +20,14 @@
 #  define UNUSED __attribute__((unused))
 # endif
 
+# ifndef EXIT_SUCCESS
+#  define EXIT_SUCCESS 0
+# endif
+
+# ifndef EXIT_FAILURE
+#  define EXIT_FAILURE 1
+# endif
+
 # ifdef BONUS
 #  define BLACK		30
 #  define RED		31

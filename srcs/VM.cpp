@@ -23,7 +23,7 @@ VM::VM(const char *filename) {
   _end = false;
   if (filename) {
     if (!file.good())
-      throw new ParseError(std::string("Invalid file : ") + filename);
+      throw ParseError(std::string("Invalid file : ") + filename);
     buf << file.rdbuf();
     _buf = buf.str();
     file.close();
@@ -81,7 +81,7 @@ void	VM::push(std::string const &str) {
 
 void	VM::pop(std::string const &str UNUSED) {
   if (_stack.empty())
-    throw new LogicError("Error on pop : stack is empty");
+    throw LogicError("Error on pop : stack is empty");
   delete _stack.front();
   _stack.pop_front();
 }
@@ -108,7 +108,7 @@ void		VM::assert(std::string const &str) {
 
   if (_stack.front()->toString() != cmp->toString()
       || _stack.front()->getType() != cmp->getType())
-    throw new AssertError(types[_stack.front()->getType()] + "(" + _stack.front()->toString()
+    throw AssertError(types[_stack.front()->getType()] + "(" + _stack.front()->toString()
 			  + ") != "
 			  + types[cmp->getType()] + "(" + cmp->toString() + ")");
   delete cmp;
@@ -120,7 +120,7 @@ void		VM::add(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
   if (_stack.size() < 2)
-    throw new LogicError("Trying to make an addition with a stack smaller than 2");
+    throw LogicError("Trying to make an addition with a stack smaller than 2");
   first = _stack.front();
   _stack.pop_front();
   second = _stack.front();
@@ -134,7 +134,7 @@ void		VM::sub(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
   if (_stack.size() < 2)
-    throw new LogicError("Trying to make a substraction with a stack smaller than 2");
+    throw LogicError("Trying to make a substraction with a stack smaller than 2");
   first = _stack.front();
   _stack.pop_front();
   second = _stack.front();
@@ -148,7 +148,7 @@ void		VM::mul(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
   if (_stack.size() < 2)
-    throw new LogicError("Trying to make a multiplication with a stack smaller than 2");
+    throw LogicError("Trying to make a multiplication with a stack smaller than 2");
   first = _stack.front();
   _stack.pop_front();
   second = _stack.front();
@@ -162,7 +162,7 @@ void		VM::div(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
   if (_stack.size() < 2)
-    throw new LogicError("Trying to make a division with a stack smaller than 2");
+    throw LogicError("Trying to make a division with a stack smaller than 2");
   first = _stack.front();
   _stack.pop_front();
   second = _stack.front();
@@ -176,7 +176,7 @@ void	VM::mod(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
   if (_stack.size() < 2)
-    throw new LogicError("Trying to make a modulo with a stack smaller than 2");
+    throw LogicError("Trying to make a modulo with a stack smaller than 2");
   first = _stack.front();
   _stack.pop_front();
   second = _stack.front();
@@ -191,7 +191,7 @@ void			VM::print(std::string const &str UNUSED) {
   int			val;
 
   if (_stack.front()->getType() != Int8)
-    throw new LogicError("Trying to print a non-int8 value");
+    throw LogicError("Trying to print a non-int8 value");
   ss << _stack.front()->toString();
   ss >> val;
   std::cout << static_cast<char>(val);
@@ -214,12 +214,12 @@ void	VM::run() {
       continue;
     args = Parser::line(line);
     if (!_fptr[args[0]])
-      throw new ParseError("Unknown instruction : " + args[0]);
+      throw ParseError("Unknown instruction : " + args[0]);
     if (!args[0].empty())
       (this->*_fptr[args[0]])(args[1]);
     delete[] args;
     if (_end)
       return;
   }
-  throw new LogicError("No exit instruction found");
+  throw LogicError("No exit instruction found");
 }
