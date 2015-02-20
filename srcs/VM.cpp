@@ -31,7 +31,9 @@ VM::VM(const char *filename) {
   else {
     while (line != ";;") {
       std::getline(std::cin, line);
-      if (line != ";;")
+      if (std::cin.eof())
+	std::cin.clear();
+      else if (line != ";;")
 	buf << line << std::endl;
     }
     _buf = buf.str();
@@ -199,14 +201,17 @@ void	VM::exit(std::string const &str UNUSED) {
   _end = true;
 }
 
+// TODO : check number of arguments for each instruction
+
 void	VM::run() {
   std::stringstream	ss;
   std::string		line;
   std::string		*args;
 
   ss << _buf;
-  // there is shit with ^D
   while (std::getline(ss, line)) {
+    if (line.empty())
+      continue;
     args = Parser::line(line);
     if (!_fptr[args[0]])
       throw new ParseError("Unknown instruction : " + args[0]);
@@ -214,7 +219,7 @@ void	VM::run() {
       (this->*_fptr[args[0]])(args[1]);
     delete[] args;
     if (_end)
-      return ;
+      return;
   }
   throw new LogicError("No exit instruction found");
 }
