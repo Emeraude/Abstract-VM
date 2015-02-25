@@ -27,25 +27,25 @@ RM	=	rm -f
 OBJS	=	$(SRCS:.cpp=.o)
 
 %.o: %.cpp
-		@printf "[\033[0;32mcompiled\033[0m] % 29s\n" $<
+		@printf "[\033[0;32mcompiled\033[0m] % 29s\n" $< | tr ' ' '.'
 		@$(CC) -c -o $@ $< $(CPPFLAGS)
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
 		@$(CC) $(OBJS) -o $(NAME)
-		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME)
+		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME) | tr ' ' '.'
 
 bonus:		CPPFLAGS+=-DBONUS;
 bonus:		all
 
 clean:
 		@$(RM) $(OBJS)
-		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(OBJS)
+		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(OBJS) | tr ' ' '.'
 
 fclean:		clean
 		@$(RM) $(NAME)
-		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(NAME)
+		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(NAME) | tr ' ' '.'
 
 re:		fclean all
 

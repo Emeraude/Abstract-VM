@@ -98,8 +98,8 @@ IOperand*		Parser::createInt8(const std::string& value) {
   ss.str(value);
   ss >> val;
   ret = new Operand<char>(Int8, val);
-  if (ret->toString() != value)
-    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
+  // if (ret->toString() != value)
+  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
   return ret;
 }
 
@@ -111,8 +111,8 @@ IOperand*		Parser::createInt16(const std::string& value) {
   ss.str(value);
   ss >> val;
   ret = new Operand<short>(Int16, val);
-  if (ret->toString() != value)
-    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
+  // if (ret->toString() != value)
+  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
   return ret;
 }
 
@@ -124,8 +124,8 @@ IOperand*		Parser::createInt32(const std::string& value) {
   ss.str(value);
   ss >> val;
   ret = new Operand<int>(Int32, val);
-  if (ret->toString() != value)
-    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
+  // if (ret->toString() != value)
+  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
   return ret;
 }
 
@@ -137,8 +137,8 @@ IOperand*		Parser::createFloat(const std::string& value) {
   ss.str(value);
   ss >> val;
   ret = new Operand<float>(Float, val);
-  if (ret->toString() != value)
-    throw MathError("Overflow or underflow : " + value + " doesn't fit in a float");
+//   if (ret->toString() != value)
+//     throw MathError("Overflow or underflow : " + value + " doesn't fit in a float");
   return ret;
 }
 
@@ -150,7 +150,7 @@ IOperand*		Parser::createDouble(const std::string& value) {
   ss.str(value);
   ss >> val;
   ret = new Operand<double>(Double, val);
-  if (ret->toString() != value)
-    throw MathError("Overflow or underflow : " + value + " doesn't fit in a double");
+  // if (ret->toString() != value)
+  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in a double");
   return ret;
 }

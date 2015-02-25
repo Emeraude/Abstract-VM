@@ -201,8 +201,6 @@ void	VM::exit(std::string const &str UNUSED) {
   _end = true;
 }
 
-// TODO : check number of arguments for each instruction
-
 void	VM::run() {
   std::stringstream	ss;
   std::string		line;
