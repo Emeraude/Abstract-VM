@@ -6,4 +6,5 @@ push float(42.42)
 push double(50.0)
 
 dump
+exit
 ;;

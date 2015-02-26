@@ -5,12 +5,13 @@
 // Login   <broggi_t@epitech.eu>
 // 
 // Started on  Tue Feb 17 18:11:18 2015 broggi_t
-// Last update Tue Feb 17 18:11:18 2015 broggi_t
+// Last update Thu Feb 26 19:05:27 2015 felix jacob
 //
 
 #include <map>
 #include <sstream>
 #include <algorithm>
+#include <limits>
 #include "Operand.hpp"
 #include "Exceptions.hpp"
 #include "Parser.hpp"
@@ -73,7 +74,6 @@ IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
 						   &createInt32,
 						   &createFloat,
 						   &createDouble};
-
   return fptr[type](value);
 }
 
@@ -81,6 +81,28 @@ IOperand*		Parser::createOperand(eOperandType type, double value) {
   std::ostringstream	os;
 
   os << value;
+  switch(type) {
+  case Int8:
+    if (value < std::numeric_limits<char>::min() || value > std::numeric_limits<char>::max())
+      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int8");
+    break ;
+  case Int16:
+    if (value < std::numeric_limits<short>::min()|| value > std::numeric_limits<short>::max())
+      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int16");
+    break ;
+  case Int32:
+    if (value < std::numeric_limits<int>::min()|| value > std::numeric_limits<int>::max())
+      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int32");
+    break ;
+  case Float:
+    if (value < std::numeric_limits<float>::min()|| value > std::numeric_limits<float>::max())
+      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an float");
+  case Double:
+    if (value < std::numeric_limits<double>::min()|| value > std::numeric_limits<double>::max())
+      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an double");
+    break ;
+  }
+
   return Parser::createOperand(type, os.str());
 }
 
