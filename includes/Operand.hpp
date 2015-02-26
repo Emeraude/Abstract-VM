@@ -71,7 +71,7 @@ public:
   IOperand		*operator+(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;
-    double		value;
+    long double		value;
 
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
@@ -82,7 +82,7 @@ public:
   IOperand		*operator-(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;
-    double		value;
+    long double		value;
 
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
@@ -93,7 +93,7 @@ public:
   IOperand		*operator*(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;
-    double		value;
+    long double		value;
 
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();
@@ -104,7 +104,7 @@ public:
   IOperand		*operator/(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;
-    double		value;
+    long double		value;
 
     ss << rhs.toString();
     precise = _type >= rhs.getType() ? _type : rhs.getType();

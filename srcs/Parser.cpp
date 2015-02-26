@@ -56,9 +56,9 @@ IOperand*	Parser::operand(std::string const& str) {
   if (ops[type] < Float && value.find(".") != std::string::npos)
     throw ParseError("Invalid dot '.' symbol find in value");
   if (ops[type] >= Float &&
-      (count(value.begin(), value.end(), '.') > 1
-       || !IS_NB(value[value.find(".") - 1])
-       || !IS_NB(value[value.find(".") + 1])))
+      (count(value.begin(), value.end(), '.') >= 1
+       && (!IS_NB(value[value.find(".") - 1])
+	   || !IS_NB(value[value.find(".") + 1]))))
     throw ParseError("Invalid dot '.' symbol find in value");
   return Parser::createOperand(ops[type], value);
 }
@@ -68,111 +68,84 @@ void		Parser::check(char c) {
     throw ParseError("Invalid value");
 }
 
-IOperand*	Parser::createOperand(eOperandType type, std::string const& value) {
-  IOperand *(*fptr[])(const std::string& value) = {&createInt8,
-						   &createInt16,
-						   &createInt32,
-						   &createFloat,
-						   &createDouble};
+IOperand*		Parser::createOperand(eOperandType type, std::string const& value) {
+  IOperand		*(*fptr[])(const std::string& value) = {&createInt8,
+								&createInt16,
+								&createInt32,
+								&createFloat,
+								&createDouble};
+
   return fptr[type](value);
 }
 
-IOperand*		Parser::createOperand(eOperandType type, double value) {
+IOperand*		Parser::createOperand(eOperandType type, long double value) {
   std::ostringstream	os;
 
   os << value;
-  switch(type) {
-  case Int8:
-    if (value < std::numeric_limits<char>::min() || value > std::numeric_limits<char>::max())
-      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int8");
-    break ;
-  case Int16:
-    if (value < std::numeric_limits<short>::min()|| value > std::numeric_limits<short>::max())
-      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int16");
-    break ;
-  case Int32:
-    if (value < std::numeric_limits<int>::min()|| value > std::numeric_limits<int>::max())
-      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an int32");
-    break ;
-  case Float:
-    if (value < std::numeric_limits<float>::min()|| value > std::numeric_limits<float>::max())
-      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an float");
-  case Double:
-    if (value < std::numeric_limits<double>::min()|| value > std::numeric_limits<double>::max())
-      throw MathError("Overflow or underflow : " + os.str() + " doesn't fit in an double");
-    break ;
-  }
-
   return Parser::createOperand(type, os.str());
 }
-
-// TODO : find a way to refactoring it
-// some bugs are still here for over/underflow :
-// int8(042) -> the first 0 make it bad
-// int32(-0) -> '-' is ignored, so it's bullshit after
-// float(42.0) -> last 0 is shit
 
 IOperand*		Parser::createInt8(const std::string& value) {
   IOperand*		ret;
   std::stringstream	ss;
-  short			val;
+  long double		val;
 
   ss.str(value);
   ss >> val;
+  if (val < std::numeric_limits<signed char>::min() || val > std::numeric_limits<signed char>::max())
+    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
   ret = new Operand<char>(Int8, val);
-  // if (ret->toString() != value)
-  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
   return ret;
 }
 
 IOperand*		Parser::createInt16(const std::string& value) {
   IOperand*		ret;
   std::stringstream	ss;
-  short			val;
+  long double		val;
 
   ss.str(value);
   ss >> val;
+  if (val < std::numeric_limits<short>::min() || val > std::numeric_limits<short>::max())
+    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
   ret = new Operand<short>(Int16, val);
-  // if (ret->toString() != value)
-  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
   return ret;
 }
 
 IOperand*		Parser::createInt32(const std::string& value) {
   IOperand*		ret;
   std::stringstream	ss;
-  int			val;
+  long double		val;
 
   ss.str(value);
   ss >> val;
+  if (val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
+    throw MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
   ret = new Operand<int>(Int32, val);
-  // if (ret->toString() != value)
-  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
   return ret;
 }
 
 IOperand*		Parser::createFloat(const std::string& value) {
   IOperand*		ret;
   std::stringstream	ss;
-  float			val;
+  long double		val;
 
   ss.str(value);
   ss >> val;
   ret = new Operand<float>(Float, val);
-//   if (ret->toString() != value)
-//     throw MathError("Overflow or underflow : " + value + " doesn't fit in a float");
+  if (val < -std::numeric_limits<float>::max() - 1 || val > std::numeric_limits<float>::max())
+    throw MathError("Overflow or underflow : " + value + " doesn't fit in an float");
   return ret;
 }
 
 IOperand*		Parser::createDouble(const std::string& value) {
   IOperand*		ret;
   std::stringstream	ss;
-  double		val;
+  long double		val;
 
   ss.str(value);
   ss >> val;
   ret = new Operand<double>(Double, val);
-  // if (ret->toString() != value)
-  //   throw MathError("Overflow or underflow : " + value + " doesn't fit in a double");
+  if (val < -std::numeric_limits<double>::max() - 1 || val > std::numeric_limits<double>::max())
+    throw MathError("Overflow or underflow : " + value + " doesn't fit in an float");
   return ret;
 }
