@@ -16,7 +16,7 @@
 
 // TODO : find a way to print line number
 
-class VMException {
+class VMException : public std::exception{
 protected:
   std::string _msg;
   std::string _type;

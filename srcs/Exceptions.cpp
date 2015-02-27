@@ -10,7 +10,7 @@
 
 #include "Exceptions.hpp"
 
-VMException::VMException(std::string const& msg) {
+VMException::VMException(std::string const& msg) : std::exception() {
   _msg = msg;
   _type = "";
 }
