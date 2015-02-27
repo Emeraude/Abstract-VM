@@ -23,7 +23,7 @@ VM::VM(const char *filename) {
   _end = false;
   if (filename) {
     if (!file.good())
-      throw ParseError(std::string("Invalid file : ") + filename);
+      throw IOError(std::string("Invalid file : ") + filename);
     buf << file.rdbuf();
     _buf = buf.str();
     file.close();

@@ -28,6 +28,11 @@ public:
   const char *what() const throw();
 };
 
+class IOError : public VMException {
+public:
+  IOError(std::string const& msg);
+};
+
 class ParseError : public VMException {
 public:
   ParseError(std::string const& msg);

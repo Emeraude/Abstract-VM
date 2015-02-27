@@ -21,6 +21,10 @@ const char	*VMException::what() const throw() {
   return (_type + _msg).data();
 }
 
+IOError::IOError(std::string const& msg) : VMException(msg) {
+  _type = "Input/Output error : ";
+}
+
 ParseError::ParseError(std::string const& msg) : VMException(msg) {
   _type = "Parse error : ";
 }
