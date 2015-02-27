@@ -99,18 +99,31 @@ static void	display(IOperand *op) {
 }
 
 void	VM::dump(std::string const &str UNUSED) {
-  for_each(_stack.begin(), _stack.end(), display);
+  std::for_each(_stack.begin(), _stack.end(), display);
 }
 
-void		VM::assert(std::string const &str) {
-  IOperand	*cmp = Parser::operand(str);
-  std::string	types[] = {"int8", "int16", "int32", "float", "double"};
+void			VM::assert(std::string const &str) {
+  IOperand		*cmp = Parser::operand(str);
+  std::string		types[] = {"int8", "int16", "int32", "float", "double"};
+#ifdef BONUS
+  int			colors[] = {YELLOW, RED, MAGENTA, GREEN, CYAN};
+  std::stringstream	ss;
+#endif
 
   if (_stack.front()->toString() != cmp->toString()
-      || _stack.front()->getType() != cmp->getType())
+      || _stack.front()->getType() != cmp->getType()) {
+#ifdef BONUS
+    ss << "\033[" << colors[_stack.front()->getPrecision()] << "m"
+       << types[_stack.front()->getType()] << "(" << _stack.front()->toString()
+       << ")\033[0m != \033[" << colors[cmp->getPrecision()] << "m"
+       << types[cmp->getType()] << "(" << cmp->toString() << ")\033[0m";
+    throw AssertError(ss.str());
+#else
     throw AssertError(types[_stack.front()->getType()] + "(" + _stack.front()->toString()
-			  + ") != "
-			  + types[cmp->getType()] + "(" + cmp->toString() + ")");
+		      + ") != "
+		      + types[cmp->getType()] + "(" + cmp->toString() + ")");
+#endif
+  }
   delete cmp;
 }
 
