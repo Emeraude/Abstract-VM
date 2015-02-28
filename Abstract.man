@@ -13,9 +13,37 @@
 
 .SH OPTIONS
 .TP
-\fB\ \fR \fBN\fR
-No options except a file name give as parameter                                                                                                   
+\fB\ \fR
+No options except a file name give as parameter
 .TP
+.TP
+The Virtual Machine accept some different arguments that are :
+.TP
+push : Push a variable on the top of stack.
+.TP
+	The type must be defined : int8, int16, int32, float and double are accepted.
+.TP
+	The value must be defined around paranteses.
+.TP
+pop : Pop the variable wish is on the top of the stack.
+.TP
+dump : Print the stack.
+.TP
+assert : Check the type and the value of the variable on the top of the stack. If there is an error, the Virtual Machine will be stoped.
+.TP
+add : Pop the two last variable of the top of the stack and do the addition from the old second last on the old last and push the result in the top of the stack.
+.TP
+sub : Pop the two last variable of the top of the stack and do the substraction from the old second last on the old last and push the result in the top of the stack.
+.TP
+mul : Pop the two last variable of the top of the stack and do the multiplication from the old second last on the old last and push the result in the top of the stack.
+.TP
+div : Pop the two last variable of the top of the stack and do the division from the old second last on the old last and push the result in the top of the stack.
+.TP
+mod : Pop the two last variable of the top of the stack and do the modulo from the old second last on the old last and push the result in the top of the stack. The is an error if the last variable on the top of the stack is a float or a double. 
+.TP
+print : Print the ascii value of the variable in top of the stack if the variable is a int8.
+.TP
+exit : Stop the execution of the Virtual Machine and do the differents operations called before.
 .SH SEE ALSO
 No related manpage.
 
