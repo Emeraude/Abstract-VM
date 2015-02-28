@@ -1,0 +1,27 @@
+.\" Manpage for avm.
+.\" Contact brogg_t@epitech.eu and jacob_f@epitech.eu .in to correct errors or typos.
+.TH man 1 " 2015" "1.0" "AbstractVM man page"
+.SH NAME
+ \- Emulate a basic Virtual Machine with somes basic instructions.
+.SH SYNOPSIS
+\fB./avm\fR [\f file_name \f ]
+
+.SH DESCRIPTION
+\fBAbstractVM\fR is a programm that emulate a basic statement of a virtual machine.
+
+\fBAbstractVM Bonus\fR is the second application compiled with the rule \f bonus\fR \f make bonus\fR).
+
+.SH OPTIONS
+.TP
+\fB\ \fR \fBN\fR
+No options except a file name give as parameter                                                                                                   
+.TP
+.SH SEE ALSO
+No related manpage.
+
+.SH REPORTING BUGS
+No known bugs.
+.br
+Report ./avm bugs to broggi_t@epitech.eu or to jacob_f@epitech.eu
+.SH AUTHOR
+broggi_t, jacob_f
