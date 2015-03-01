@@ -14,8 +14,6 @@
 # include <exception>
 # include <string>
 
-// TODO : find a way to print line number
-
 class VMException : public std::exception{
 protected:
   std::string _msg;

@@ -15,6 +15,7 @@ DIR	=	./srcs
 SRCS	=	$(DIR)/Exceptions.cpp \
 		$(DIR)/main.cpp \
 		$(DIR)/Parser.cpp \
+		$(DIR)/unit.cpp \
 		$(DIR)/VM.cpp
 
 CPPFLAGS	+= -W -Wall -Wextra -Werror
@@ -39,6 +40,9 @@ $(NAME):	$(OBJS)
 bonus:		CPPFLAGS+=-DBONUS;
 bonus:		all
 
+unit:		CPPFLAGS+=-DUNIT;
+unit:		all
+
 clean:
 		@$(RM) $(OBJS)
 		@printf "[\033[0;31mdeleted\033[0m] % 30s\n" $(OBJS) | tr ' ' '.'
@@ -51,4 +55,6 @@ re:		fclean all
 
 rebonus:	fclean bonus
 
-.PHONY:		all bonus clean fclean re rebonus
+reunit:		fclean unit
+
+.PHONY:		all bonus unit clean fclean re rebonus reunit

@@ -39,6 +39,10 @@
 #  define WHITE		37
 # endif
 
+# ifdef UNIT
+void	unit_tests();
+# endif
+
 class VM {
 private:
   bool								_end;
