@@ -137,7 +137,7 @@ IOperand*		Parser::createInt8(const std::string& value) {
   ss >> val;
   if (val < std::numeric_limits<signed char>::min() || val > std::numeric_limits<signed char>::max())
     throw MathError("Overflow or underflow : " + value + " doesn't fit in an int8");
-  ret = new Operand<char>(Int8, val);
+  ret = new Operand<char>(Int8, value);
   return ret;
 }
 
@@ -150,7 +150,7 @@ IOperand*		Parser::createInt16(const std::string& value) {
   ss >> val;
   if (val < std::numeric_limits<short>::min() || val > std::numeric_limits<short>::max())
     throw MathError("Overflow or underflow : " + value + " doesn't fit in an int16");
-  ret = new Operand<short>(Int16, val);
+  ret = new Operand<short>(Int16, value);
   return ret;
 }
 
@@ -163,7 +163,7 @@ IOperand*		Parser::createInt32(const std::string& value) {
   ss >> val;
   if (val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
     throw MathError("Overflow or underflow : " + value + " doesn't fit in an int32");
-  ret = new Operand<int>(Int32, val);
+  ret = new Operand<int>(Int32, value);
   return ret;
 }
 
@@ -174,9 +174,9 @@ IOperand*		Parser::createFloat(const std::string& value) {
 
   ss.str(value);
   ss >> val;
-  ret = new Operand<float>(Float, val);
   if (val < -std::numeric_limits<float>::max() - 1 || val > std::numeric_limits<float>::max())
     throw MathError("Overflow or underflow : " + value + " doesn't fit in an float");
+  ret = new Operand<float>(Float, value);
   return ret;
 }
 
@@ -187,8 +187,8 @@ IOperand*		Parser::createDouble(const std::string& value) {
 
   ss.str(value);
   ss >> val;
-  ret = new Operand<double>(Double, val);
   if (val < -std::numeric_limits<double>::max() - 1 || val > std::numeric_limits<double>::max())
     throw MathError("Overflow or underflow : " + value + " doesn't fit in an float");
+  ret = new Operand<double>(Double, value);
   return ret;
 }
