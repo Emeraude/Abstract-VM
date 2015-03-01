@@ -5,7 +5,7 @@ THROW_OVERFLOW="Syntax Error : Unknown type"
 THROW_UNDERFLOW=""
 THROW_DIV0="Mathematique Error : Division by 0"
 
-.././avm < small_test > .avm_small_test 
+.././avm < small_test > .avm_small_test
 diff small_test_diff .avm_small_test > /dev/null
 
 if [ $? -eq 0 ]

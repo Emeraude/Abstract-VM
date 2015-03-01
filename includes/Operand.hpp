@@ -24,13 +24,13 @@ private:
   std::string	_str;
 
 public:
-  Operand(eOperandType type, T nb) {
+  Operand(eOperandType type, std::string const& str) {
     std::stringstream ss;
 
+    ss.str(str);
     _type = type;
-    _value = nb;
-    ss << +nb;
-    _str = ss.str();
+    ss >> _value;
+    _str = str;
   }
 
   Operand(Operand const& o) {
