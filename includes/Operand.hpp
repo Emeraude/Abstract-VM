@@ -66,8 +66,6 @@ public:
 
   // OPERATORS
 
-  // TODO : refactoring it
-
   IOperand		*operator+(const IOperand &rhs) const {
     std::stringstream	ss;
     eOperandType	precise;

@@ -127,8 +127,6 @@ void			VM::assert(std::string const &str) {
   delete cmp;
 }
 
-// TODO : find a way to refactoring this
-
 void		VM::add(std::string const &str UNUSED) {
   IOperand	*first, *second;
 
@@ -224,6 +222,8 @@ void	VM::run() {
     if (line.empty())
       continue;
     args = Parser::line(line);
+    if (args[0].empty())
+      continue;
     if (!_fptr[args[0]])
       throw ParseError("Unknown instruction : " + args[0]);
     if (!args[0].empty())
