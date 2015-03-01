@@ -13,6 +13,8 @@
 .PP
 If compiled with \fBbonus\fR option, some instructions will be added.
 .PP
+The caracter for activing that text is a commentary is ;
+.PP
 If no argument is given, the virtual machine will read on the standard input, until a line \fB;;\fR is found. In this case, the \fBEOF\fR character \fB^D\fR will be ignored.
 .SH INSTRUCTIONS
 .TP
